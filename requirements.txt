@@ -2,3 +2,5 @@ pandas
 matplotlib
 statsmodels
 openpyxl
+scikit-learn
+notebook
