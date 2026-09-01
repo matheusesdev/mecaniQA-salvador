@@ -4,3 +4,4 @@ statsmodels
 openpyxl
 scikit-learn
 notebook
+ipykernel

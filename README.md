@@ -97,6 +97,19 @@ jupyter notebook
 
 Execute as células dos notebooks na ordem. Os caminhos de leitura foram definidos considerando o Jupyter aberto na pasta `notebooks`.
 
+### Execução pelo VS Code
+
+1. Abra a pasta completa `mecaniQA-salvador` no VS Code.
+2. Instale as extensões oficiais **Python** e **Jupyter**, da Microsoft.
+3. Abra um terminal na raiz do projeto e execute os comandos de criação do ambiente, ativação e instalação apresentados acima.
+4. Abra o notebook desejado.
+5. No canto superior direito do notebook, clique em **Selecionar Kernel**.
+6. Escolha **Ambientes Python** e selecione o interpretador `.venv\Scripts\python.exe` deste projeto.
+7. Confirme que o nome do kernel exibido aponta para `.venv`, e não para o Python da Microsoft Store.
+8. Clique em **Executar Tudo** e aguarde a conclusão de todas as células.
+
+Execute primeiro `notebooks/oat1_compreensao_baseline.ipynb` e depois `notebooks/oat1_pipeline_preditivo.ipynb`. Caso o VS Code informe que `ipykernel` não está instalado, confirme que a `.venv` está selecionada e repita `python -m pip install -r requirements.txt` no terminal ativado.
+
 ## Equipe e papéis
 
 | Papel | Integrante |
