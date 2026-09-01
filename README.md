@@ -1,191 +1,137 @@
 # 🔧 MecâniQA Automotive Tech
 
-## 📌 OAT 1 — Compreensão e Baseline
+Projeto desenvolvido para o **Programa de Trainee 2026.2 da MecâniQA Automotive Tech**, com aplicação de Ciência de Dados e Séries Temporais ao histórico de manutenções automotivas.
 
-Projeto desenvolvido para o **Programa de Trainee 2026.2 da MecâniQA Automotive Tech**, com foco na aplicação de conceitos de **Ciência de Dados e Séries Temporais** para análise do histórico de manutenções automotivas.
+Nesta etapa da OAT 1, o projeto reúne a compreensão da série diária de trocas de óleo, sua preparação e decomposição, os modelos baseline e a construção de um pipeline preditivo único para evitar vazamento de dados entre treino e teste.
 
----
+## Contexto do problema
 
-## 📖 Contexto do Projeto
+Oficinas e auto centers de Feira de Santana e região enfrentam oscilações na demanda por manutenções preventivas. Picos inesperados podem causar falta de peças e atrasos; períodos de baixa podem gerar ociosidade da equipe. O projeto busca criar uma base analítica capaz de apoiar o planejamento de estoque, escala e atendimento.
 
-Os clientes da **MecâniQA**, compostos por oficinas e auto centers de Feira de Santana e região, enfrentam **picos inesperados na demanda por manutenções preventivas** em determinados veículos.
+A série principal adotada pela equipe é `Trocas_Oleo`, com registros diários de 2024 e 2025.
 
-Essas variações podem provocar problemas operacionais, como:
+## O que já foi desenvolvido
 
-* falta de peças em estoque em períodos de alta demanda;
-* ociosidade da equipe de mecânicos em períodos de baixa demanda;
-* dificuldade no planejamento de recursos;
-* dificuldade em antecipar a demanda por determinados tipos de manutenção.
+### Preparação dos dados
 
-Diante desse cenário, o projeto tem como objetivo construir a base de um futuro **software preditivo**, começando pela compreensão do histórico de manutenções e pela implementação de modelos simples que funcionem como referência (**Baseline**) para modelos mais avançados no futuro.
+- conversão da coluna `Data` para o tipo temporal;
+- ordenação cronológica e definição da data como índice;
+- reamostragem da série de trocas de óleo em frequência diária;
+- identificação de valores ausentes e outliers;
+- criação de variáveis de atraso e médias móveis usando apenas dados passados.
 
-Nesta primeira etapa, a equipe atua como o **Time de Ciência de Dados da MecâniQA**, trabalhando principalmente com dados temporais relacionados a **Trocas de Óleo e Manutenções de Motor**.
+### Análise exploratória e decomposição
 
----
+- visualização da série temporal;
+- separação em tendência, sazonalidade e resíduos;
+- decomposição aditiva;
+- periodicidade semanal de 7 dias, conforme decisão da equipe;
+- baselines Naive, média móvel de 7 dias e média móvel de 30 dias como referências de comparação.
 
-## 🎯 Objetivos
+### Pipeline preditivo
 
-A OAT 1 tem como principais objetivos:
+O notebook `notebooks/oat1_pipeline_preditivo.ipynb` implementa a entrega atual com a ordem definida no brainstorm:
 
-* compreender a estrutura de **dados temporais** e sua indexação por tempo;
-* realizar **Análise Exploratória de Dados (EDA)** aplicada a séries temporais;
-* identificar componentes como **Tendência, Sazonalidade e Ruído**;
-* identificar e tratar **dados ausentes**;
-* detectar e tratar **outliers**;
-* implementar modelos de previsão **Baseline**;
-* utilizar **Médias Móveis** para análise e previsão;
-* implementar um modelo **Naive (Ingênuo)**;
-* comparar visualmente os valores reais com as previsões produzidas pelos modelos.
+1. preencher valores nulos com a mediana aprendida no treino;
+2. padronizar as variáveis com `StandardScaler`;
+3. aplicar o modelo preditivo Ridge com o hiperparâmetro `alpha` ajustado por validação temporal.
 
----
+> **Ressalva de alinhamento acadêmico:** os materiais disponibilizados orientam o uso do “modelo preditivo tunado da aula passada”, mas não identificam qual estimador ou quais hiperparâmetros haviam sido definidos. Para viabilizar esta entrega, foi adotada a regressão Ridge como decisão técnica provisória, por ser compatível com a etapa de padronização exigida. O hiperparâmetro `alpha` é selecionado por `GridSearchCV` com `TimeSeriesSplit`. Essa escolha permanece sujeita à confirmação da equipe e do professor e pode ser substituída caso exista uma definição anterior diferente.
 
-## 🧹 Preparação e Limpeza dos Dados
+O treinamento final é realizado com uma única chamada:
 
-Antes das análises, o histórico de manutenções deve ser preparado de maneira que a integridade da série temporal seja preservada.
+```python
+pipeline.fit(X_train, y_train)
+```
 
-O processo contempla:
+A divisão entre treino e teste é cronológica, sem embaralhamento. A seleção do hiperparâmetro utiliza `TimeSeriesSplit`, e a avaliação apresenta MAE, RMSE e R², além do gráfico de valores reais contra previsões.
 
-### Dados Ausentes
+## Como o pipeline evita data leakage
 
-Identificação de períodos sem registros e aplicação de técnicas adequadas de preenchimento, como:
+O `SimpleImputer` e o `StandardScaler` executam `fit` apenas no conjunto de treino. Assim, mediana, média e escala ficam armazenadas no pipeline. Ao receber o conjunto de teste ou dados futuros, o pipeline usa somente `transform`, sem recalcular essas estatísticas com informações que não estavam disponíveis no treinamento.
 
-* interpolação;
-* `forward fill`.
+As variáveis históricas também usam deslocamento de um dia (`shift(1)`), garantindo que a previsão de uma data considere apenas o passado.
 
-### Outliers
+## Tecnologias
 
-Identificação de valores anormais ou inconsistentes na série temporal e aplicação de métodos estatísticos para tratamento desses valores.
+- Python
+- Jupyter Notebook
+- Pandas
+- NumPy
+- Matplotlib
+- Statsmodels
+- Scikit-Learn
+- OpenPyXL
+- Git e GitHub
 
----
-
-## 📊 Análise Exploratória de Dados — EDA
-
-A análise exploratória busca compreender o comportamento das manutenções ao longo do tempo.
-
-Entre as análises realizadas estão:
-
-* visualização da série temporal completa;
-* análise da evolução das manutenções ao longo dos meses;
-* identificação de padrões;
-* análise de tendência;
-* análise de sazonalidade;
-* identificação de ruídos;
-* decomposição da série temporal.
-
-A decomposição permite separar a série em componentes como:
-
-**Observado → Tendência → Sazonalidade → Resíduos**
-
-Isso facilita a compreensão dos padrões existentes nos dados antes da aplicação de modelos preditivos.
-
----
-
-## 🔮 Modelos Baseline
-
-Os modelos Baseline funcionam como um **piso de comparação** para futuros modelos de Machine Learning.
-
-### Modelo Naive
-
-O modelo Naive utiliza uma regra simples:
-
-> A previsão da demanda de amanhã é igual à demanda observada hoje.
-
-Apesar de simples, esse modelo fornece uma referência importante para avaliar se modelos mais avançados realmente apresentam ganhos de desempenho.
-
-### Médias Móveis
-
-Também são utilizadas **Médias Móveis de 7 e 30 dias**.
-
-Essas médias permitem suavizar oscilações da série e gerar previsões considerando o comportamento recente das manutenções.
-
----
-
-## 📈 Visualizações
-
-O projeto deverá apresentar visualmente:
-
-* série temporal original;
-* tendência;
-* sazonalidade;
-* resíduos/ruídos;
-* médias móveis;
-* previsões do modelo Naive;
-* previsões baseadas em médias móveis;
-* comparação entre dados reais e previsões.
-
----
-
-## 🛠️ Tecnologias
-
-O projeto é desenvolvido utilizando o ecossistema Python para análise de dados.
-
-Principais tecnologias e ferramentas utilizadas:
-
-* **Python**
-* **Jupyter Notebook**
-* **Pandas**
-* **NumPy**
-* **Matplotlib**
-* **Statsmodels**
-* **Git**
-* **GitHub**
-
----
-
-## 📂 Estrutura do Projeto
-
-A estrutura do repositório segue:
+## Estrutura do projeto
 
 ```text
 mecaniQA-salvador/
-│
-├── README.md
-├── requirements.txt
-│
 ├── data/
 │   └── mecaniqa_dataset.xlsx
-│
-└── notebooks/
-    └── oat1_compreensao_baseline.ipynb
+├── docs/
+│   └── mecaniQA_oat1_mecaniQA-salvador.pdf
+├── notebooks/
+│   ├── oat1_compreensao_baseline.ipynb
+│   └── oat1_pipeline_preditivo.ipynb
+├── README.md
+└── requirements.txt
 ```
 
-> A estrutura poderá sofrer alterações durante o desenvolvimento do projeto.
+## Como executar
 
----
+Crie e ative um ambiente virtual, instale as dependências e abra o Jupyter Notebook:
 
-## 👥 Equipe
+```bash
+python -m venv .venv
+```
 
-| Membro                            |
-| :-------------------------------- |
-| Albert Santos Soares              |
-| Juan Pablo Barros Carvalho        |
-| Matheus Espírito Santo dos Santos |
-| Rafael Pires Araujo               |
-| William Bichara de Souza          |
+No Windows PowerShell:
 
----
+```powershell
+.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+jupyter notebook
+```
 
-## 📦 Entrega
+Execute as células dos notebooks na ordem. Os caminhos de leitura foram definidos considerando o Jupyter aberto na pasta `notebooks`.
 
-O projeto será desenvolvido e versionado utilizando **Git/GitHub**.
+### Execução pelo VS Code
 
-O repositório segue o padrão definido para a atividade:
+1. Abra a pasta completa `mecaniQA-salvador` no VS Code.
+2. Instale as extensões oficiais **Python** e **Jupyter**, da Microsoft.
+3. Abra um terminal na raiz do projeto e execute os comandos de criação do ambiente, ativação e instalação apresentados acima.
+4. Abra o notebook desejado.
+5. No canto superior direito do notebook, clique em **Selecionar Kernel**.
+6. Escolha **Ambientes Python** e selecione o interpretador `.venv\Scripts\python.exe` deste projeto.
+7. Confirme que o nome do kernel exibido aponta para `.venv`, e não para o Python da Microsoft Store.
+8. Clique em **Executar Tudo** e aguarde a conclusão de todas as células.
+
+Execute primeiro `notebooks/oat1_compreensao_baseline.ipynb` e depois `notebooks/oat1_pipeline_preditivo.ipynb`. Caso o VS Code informe que `ipykernel` não está instalado, confirme que a `.venv` está selecionada e repita `python -m pip install -r requirements.txt` no terminal ativado.
+
+## Equipe e papéis
+
+| Papel | Integrante |
+| :-- | :-- |
+| Piloto | William Bichara de Souza |
+| Copiloto | Rafael Pires Araújo |
+| Analista de Qualidade (QA) | Albert Santos Soares |
+| Arquiteto | Juan Pablo Barros Carvalho |
+| Scrum Master | Matheus Espírito Santo dos Santos |
+
+## Entrega
+
+O desenvolvimento desta etapa foi realizado na branch:
 
 ```text
-mecaniQA-salvador
+feat/pipeline-preditivo-oat1
 ```
 
-A versão considerada para avaliação será aquela disponível na branch:
+O repositório segue o padrão `mecaniQA-salvador`. A versão considerada para avaliação deverá ser integrada à branch `main` conforme a orientação da atividade e a revisão da equipe.
+
+O material de apresentação existente está em:
 
 ```text
-main
+docs/mecaniQA_oat1_mecaniQA-salvador.pdf
 ```
-
-Também fará parte do repositório a apresentação do projeto seguindo o padrão:
-
-```text
-mecaniQA_oat1_salvador.pdf
-```
-
----
-
