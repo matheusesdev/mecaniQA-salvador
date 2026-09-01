@@ -36,6 +36,8 @@ O notebook `notebooks/oat1_pipeline_preditivo.ipynb` implementa a entrega atual 
 2. padronizar as variáveis com `StandardScaler`;
 3. aplicar o modelo preditivo Ridge com o hiperparâmetro `alpha` ajustado por validação temporal.
 
+> **Ressalva de alinhamento acadêmico:** os materiais disponibilizados orientam o uso do “modelo preditivo tunado da aula passada”, mas não identificam qual estimador ou quais hiperparâmetros haviam sido definidos. Para viabilizar esta entrega, foi adotada a regressão Ridge como decisão técnica provisória, por ser compatível com a etapa de padronização exigida. O hiperparâmetro `alpha` é selecionado por `GridSearchCV` com `TimeSeriesSplit`. Essa escolha permanece sujeita à confirmação da equipe e do professor e pode ser substituída caso exista uma definição anterior diferente.
+
 O treinamento final é realizado com uma única chamada:
 
 ```python
