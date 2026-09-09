@@ -29,6 +29,25 @@ A série principal adotada pela equipe é `Trocas_Oleo`, com registros diários 
 - baselines Naive e média móvel de 7 dias como referências de comparação;
 - médias móveis de 7 e 30 dias como variáveis do pipeline preditivo.
 
+### Atividade de 02/09/2026 — baselines sem vazamento temporal
+
+Na primeira atividade da OAT 2 foram implementados dois modelos simples para
+servir como referência nas avaliações seguintes:
+
+- **Naive:** a previsão de cada dia repete o valor observado no dia anterior;
+- **média móvel de 7 dias:** a previsão utiliza a média dos sete dias anteriores.
+
+Os dois baselines aplicam `shift(1)` antes de gerar a previsão. Dessa forma, o
+resultado do próprio dia e os dados futuros não entram no cálculo. Os valores
+ausentes do histórico são preenchidos com `ffill`, que utiliza somente a última
+observação conhecida. A série real preserva os valores ausentes para que eles
+não sejam interpretados incorretamente como dias com zero trocas.
+
+O notebook `notebooks/oat1_compreensao_baseline.ipynb` apresenta uma tabela com
+as previsões e um gráfico sobreposto dos valores reais, do modelo Naive e da
+média móvel. Essa implementação é a base para a validação temporal e o cálculo
+de MAE, RMSE e MAPE na atividade de 09/09/2026.
+
 ### Pipeline preditivo
 
 O notebook `notebooks/oat1_pipeline_preditivo.ipynb` implementa a entrega atual com a ordem definida no brainstorm:
