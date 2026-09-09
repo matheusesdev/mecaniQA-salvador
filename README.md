@@ -26,7 +26,8 @@ A série principal adotada pela equipe é `Trocas_Oleo`, com registros diários 
 - separação em tendência, sazonalidade e resíduos;
 - decomposição aditiva;
 - periodicidade semanal de 7 dias, conforme decisão da equipe;
-- baselines Naive, média móvel de 7 dias e média móvel de 30 dias como referências de comparação.
+- baselines Naive e média móvel de 7 dias como referências de comparação;
+- médias móveis de 7 e 30 dias como variáveis do pipeline preditivo.
 
 ### Pipeline preditivo
 
