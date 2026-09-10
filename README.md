@@ -48,6 +48,79 @@ as previsões e um gráfico sobreposto dos valores reais, do modelo Naive e da
 média móvel. Essa implementação é a base para a validação temporal e o cálculo
 de MAE, RMSE e MAPE na atividade de 09/09/2026.
 
+### Atividade de 09/09/2026 — validação temporal e métricas
+
+Branch desta atividade: `feat/validacao-temporal-baselines`.
+
+**Brainstorm 1 — a linguagem do cliente. Decisão da equipe:** usamos MAE
+como critério principal porque expressa o tamanho médio do erro absoluto na
+unidade da demanda. O RMSE também tem essa unidade, mas eleva os erros ao
+quadrado antes de calcular a média e extrair a raiz: por isso evidencia mais
+um dia com erro de dezenas de manutenções. Apresentamos ambos: MAE para o
+erro cotidiano e RMSE para destacar erros grandes. O MAPE complementa a
+leitura em percentual, mas pode ser muito sensível a demandas pequenas e
+não é definido quando a demanda real é zero.
+
+**Brainstorm 2 — validação no tempo. Decisão da equipe:** usamos
+`TimeSeriesSplit(n_splits=5)` com treino expansivo, sem embaralhamento.
+O K-Fold tradicional pode treinar com datas posteriores às datas avaliadas,
+mesmo sem embaralhar, porque usa os demais blocos como treino. Isso permite
+acesso ao futuro e não reproduz a previsão da oficina. Aqui, todo treino
+termina antes do início do respectivo teste, preservando tendência e ordem
+temporal. Apenas desligar o embaralhamento do K-Fold não resolve o problema.
+
+**Protocolo:** mantivemos Naive e média móvel de sete dias, `shift(1)` e
+preenchimento causal por `ffill`, conforme a atividade anterior. Cada previsão
+é de **um dia à frente**, feita com o histórico disponível até a véspera.
+Durante cada teste, a observação de um dia passa a integrar o histórico para
+prever o seguinte; não estamos prevendo todos os 121 dias de uma janela de
+uma única vez. Não usamos interpolação na avaliação. Valores reais ausentes
+permanecem ausentes e são excluídos das métricas de ambos os modelos nas
+mesmas datas. Os zeros continuam no MAE e RMSE e são excluídos somente do
+MAPE, com a quantidade de dias efetivamente avaliados impressa por fold.
+
+A implementação está em `validacao_baselines.py` e a seção 7 do notebook
+`notebooks/oat1_compreensao_baseline.ipynb` executa o avaliador e imprime o
+boletim solicitado. Para executar diretamente com o Python do MSYS2:
+
+```powershell
+& C:\msys64\ucrt64\bin\python.exe .\validacao_baselines.py
+```
+
+**Resultados medidos na base do projeto:** cinco testes consecutivos de
+121 dias, de 06/05/2024 a 31/12/2025. São 605 dias avaliados para MAE/RMSE e
+604 para MAPE, pois um dia tem demanda zero. Não há reais ausentes nesses
+testes. O boletim agrega todos os erros de teste; não calcula a média simples
+dos RMSEs por fold.
+
+| Baseline | MAE (trocas/dia) | RMSE (trocas/dia) | MAPE |
+| :-- | --: | --: | --: |
+| Naive | 6,6463 | 8,9233 | 32,61% |
+| Média móvel de 7 dias | 7,3558 | 8,0889 | 37,18% |
+
+**Escolha:** Naive foi o melhor pelo critério principal, MAE, inclusive nos
+cinco folds, e também teve menor MAPE agregado. Seu erro absoluto médio foi
+de aproximadamente **6,65 trocas por dia**. A média móvel apresentou menor
+RMSE, indicando vantagem quando damos mais peso aos erros grandes. Assim,
+Naive será a referência principal, mantendo a média móvel na comparação.
+
+**São bons o suficiente?** Ainda não podemos afirmar: falta definir com a
+oficina o erro tolerável e o custo de falta ou excesso de estoque. Essas
+métricas medem magnitude, não distinguem falta de sobra. Também não são
+uma garantia de desempenho futuro nem uma avaliação final independente da
+escolha do baseline.
+
+**Trocas não são litros:** `Trocas_Oleo` mede quantidade de serviços. A base
+não informa litros consumidos. Se a oficina fornecer um consumo constante
+de `L` litros por troca, o MAE em litros/dia será `6,6463 × L` para o Naive
+(e o RMSE também é multiplicado por `L`). Se o consumo variar por veículo,
+serão necessários dados de volume para avaliar diretamente o erro em litros.
+
+Validação executada: todas as células de código do notebook, equivalência
+da série no CSV e Excel, ordem treino/teste, ausência de datas de teste
+repetidas, invariância das previsões anteriores ao alterar o futuro e
+conferência das métricas em exemplos com demanda zero.
+
 ### Pipeline preditivo
 
 O notebook `notebooks/oat1_pipeline_preditivo.ipynb` implementa a entrega atual com a ordem definida no brainstorm:
