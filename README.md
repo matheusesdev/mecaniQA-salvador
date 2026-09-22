@@ -45,12 +45,6 @@ jupyter notebook
 
 Execute todas as células do notebook na ordem. O caminho do dataset funciona quando o Jupyter é iniciado pela raiz ou pela pasta `notebooks`.
 
-Também é possível executar a validação reutilizável dos baselines:
-
-```powershell
-python .\validacao_baselines.py
-```
-
 O boletim segue o formato exigido:
 
 ```text
@@ -66,8 +60,7 @@ mecaniQA-salvador/
 ├── notebooks/oat2_pipeline_preditivo.ipynb
 ├── tests/test_oat2_delivery.ps1
 ├── README.md
-├── requirements.txt
-└── validacao_baselines.py
+└── requirements.txt
 ```
 
 ## Entrega
