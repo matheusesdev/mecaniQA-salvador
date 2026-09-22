@@ -125,9 +125,18 @@ conferência das métricas em exemplos com demanda zero.
 
 O notebook `notebooks/oat1_pipeline_preditivo.ipynb` implementa a entrega atual com a ordem definida no brainstorm:
 
-1. preencher valores nulos com a mediana aprendida no treino;
-2. padronizar as variáveis com `StandardScaler`;
-3. aplicar o modelo preditivo Ridge com o hiperparâmetro `alpha` ajustado por validação temporal.
+1. criar `lag_1` e `lag_7` com `shift(1)` e `shift(7)`;
+2. criar as janelas rolantes `rolling_7` e `rolling_30` usando somente o histórico anterior;
+3. remover as linhas sem histórico suficiente para a maior janela ou afetadas por nulos da série, evitando preencher features temporais com dados futuros;
+4. manter a imputação por mediana aprendida no treino como proteção para eventuais nulos residuais;
+5. padronizar as variáveis com `StandardScaler`;
+6. aplicar o modelo preditivo Ridge com o hiperparâmetro `alpha` ajustado por validação temporal.
+
+O DataFrame temporal permanente é exibido com `df.head(15)` após o tratamento. A
+checagem confirma que `lag_1`, `lag_7`, `rolling_7` e `rolling_30` estão
+preenchidas e alinhadas cronologicamente. Como todas as features históricas
+usam deslocamento antes do cálculo, nenhuma observação do próprio dia ou do
+futuro entra na previsão.
 
 > **Ressalva de alinhamento acadêmico:** os materiais disponibilizados orientam o uso do “modelo preditivo tunado da aula passada”, mas não identificam qual estimador ou quais hiperparâmetros haviam sido definidos. Para viabilizar esta entrega, foi adotada a regressão Ridge como decisão técnica provisória, por ser compatível com a etapa de padronização exigida. O hiperparâmetro `alpha` é selecionado por `GridSearchCV` com `TimeSeriesSplit`. Essa escolha permanece sujeita à confirmação da equipe e do professor e pode ser substituída caso exista uma definição anterior diferente.
 
