@@ -68,10 +68,11 @@ Resultados do Baseline - MAE: X, RMSE: Y, MAPE: Z%
 
 ## Estrutura principal
 
-```text
+```bash
 mecaniQA-salvador/
 ├── data/mecaniqa_dataset.xlsx
 ├── notebooks/oat1_compreensao_baseline.ipynb
+├── notebooks/oat1_pipeline_preditivo.ipynb
 ├── notebooks/oat2_pipeline_preditivo.ipynb
 ├── tests/test_oat2_delivery.ps1
 ├── README.md
