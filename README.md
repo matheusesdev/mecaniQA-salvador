@@ -17,7 +17,11 @@ Para executar, instale as dependências com `python -m pip install -r requiremen
 
 A OAT 1 identifica valores ausentes, o valor extremo de 150 em `Trocas_Oleo` e valores negativos em `Manutencao_Motor`, mas não remove o outlier nem corrige valores negativos. `Manutencao_Motor` não é o alvo principal do modelo atual. Os baselines utilizam o valor anterior e a média móvel de sete dias; não foi implementado baseline de 30 dias. A validação consolidada e oficial dos baselines permanece na OAT 2.
 
-## Entregas práticas
+## OAT 2 — Baselines, validação temporal e features
+
+O notebook oficial da entrega é `notebooks/oat2_pipeline_preditivo.ipynb`.
+
+### Entregas práticas
 
 O notebook contém:
 
@@ -44,9 +48,14 @@ O notebook contém:
 
 Nos resultados medidos pela equipe, o Naive teve o menor MAE, aproximadamente 6,65 trocas por dia, e foi escolhido como referência principal. A média móvel de 7 dias teve RMSE menor. O MAPE exclui somente os valores reais iguais a zero.
 
+Na validação temporal dos baselines, o Naive obteve MAE 6,6463, RMSE 8,9185 e MAPE 32,64%; a média móvel de 7 dias obteve MAE 7,3558, RMSE 8,0881 e MAPE 37,22%. O Naive permanece como baseline principal pelo menor MAE, enquanto a média móvel apresentou o menor RMSE.
+
+No teste cronológico final, o pipeline Ridge obteve MAE 4,106, RMSE 4,955 e R² 0,676, com `alpha` 10 selecionado por `TimeSeriesSplit`.
+
 ### Features temporais — 16/09
 
 - `lag_1` captura o curto prazo, `lag_7` o ciclo semanal e `lag_30` uma referência mensal.
+- `rolling_7` e `rolling_30` resumem janelas de 7 e 30 dias; ambas usam `shift(1)` antes de `rolling()`.
 - As linhas iniciais de aquecimento são removidas depois da criação das features. Nenhum lag é preenchido com dados futuros.
 
 ## Como executar
@@ -81,4 +90,4 @@ mecaniQA-salvador/
 
 ## Entrega
 
-Os ajustes foram desenvolvidos na branch `feat/consolidacao-oat2`. Depois da revisão da equipe, a branch deve ser integrada à `main`, conforme solicitado pelo professor.
+A entrega consolidada da OAT 2 foi revisada e integrada à branch `main`.
