@@ -9,13 +9,13 @@ A OAT 1 utiliza `data/mecaniqa_dataset.xlsx` e tem como notebooks oficiais:
 - `notebooks/oat1_compreensao_baseline.ipynb`, para inspeção, decomposição e registro dos baselines;
 - `notebooks/oat1_pipeline_preditivo.ipynb`, para o pipeline preditivo.
 
-A série principal é `Trocas_Oleo`. A análise descritiva usa decomposição aditiva com periodicidade de sete dias e interpola somente uma cópia destinada à decomposição. O pipeline combina `SimpleImputer`, `StandardScaler` e regressão `Ridge`, com seleção de `alpha` por `TimeSeriesSplit`. A divisão é cronológica: 80% dos registros preparados para treino e os 20% finais para teste, sem embaralhamento.
+A série principal é `Trocas_Oleo`. A OAT 1 preserva o dataset original e limpa uma cópia de trabalho: interpola ausentes, identifica outliers pela regra do IQR e substitui os valores inválidos por interpolação temporal. A análise descritiva usa decomposição aditiva com periodicidade de sete dias. O pipeline combina `SimpleImputer`, `StandardScaler` e regressão `Ridge`, com seleção de `alpha` por `TimeSeriesSplit`. A divisão é cronológica: 80% dos registros preparados para treino e os 20% finais para teste, sem embaralhamento.
 
 Para executar, instale as dependências com `python -m pip install -r requirements.txt`, inicie o Jupyter pela raiz do projeto e execute todas as células dos dois notebooks na ordem.
 
 ### Escopo efetivamente implementado na OAT 1
 
-A OAT 1 identifica valores ausentes, o valor extremo de 150 em `Trocas_Oleo` e valores negativos em `Manutencao_Motor`, mas não remove o outlier nem corrige valores negativos. `Manutencao_Motor` não é o alvo principal do modelo atual. Os baselines utilizam o valor anterior e a média móvel de sete dias; não foi implementado baseline de 30 dias. A validação consolidada e oficial dos baselines permanece na OAT 2.
+A OAT 1 trata valores ausentes, o valor extremo de 150 em `Trocas_Oleo` e valores negativos em `Manutencao_Motor` sem modificar o arquivo de origem. Os baselines utilizam o valor anterior e médias móveis de 7 e 30 dias, sempre com `shift(1)` para impedir vazamento do valor previsto. A validação consolidada e oficial dos baselines permanece na OAT 2.
 
 ## OAT 2 — Baselines, validação temporal e features
 
