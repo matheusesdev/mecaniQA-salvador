@@ -1,4 +1,6 @@
 import unittest
+import json
+from pathlib import Path
 
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import TimeSeriesSplit
@@ -34,6 +36,19 @@ class Oat3TuningTests(unittest.TestCase):
             descrever_variacao_percentual(12.70, 12.80),
             "aumentou em 0.79%",
         )
+
+    def test_notebook_reutiliza_a_limpeza_validada_da_oat1(self):
+        notebook = json.loads(
+            Path("notebooks/oat3_pipeline_preditivo.ipynb").read_text(encoding="utf-8")
+        )
+        codigo = "\n".join(
+            "".join(cell.get("source", []))
+            for cell in notebook["cells"]
+            if cell.get("cell_type") == "code"
+        )
+
+        self.assertIn("from oat1_processing import tratar_dados_mecaniqa", codigo)
+        self.assertIn("tratar_dados_mecaniqa(dados_brutos)", codigo)
 
 
 if __name__ == "__main__":
