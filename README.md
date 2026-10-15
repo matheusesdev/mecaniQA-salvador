@@ -58,6 +58,14 @@ No teste cronológico final, o pipeline Ridge obteve MAE 4,106, RMSE 4,955 e R²
 - `rolling_7` e `rolling_30` resumem janelas de 7 e 30 dias; ambas usam `shift(1)` antes de `rolling()`.
 - As linhas iniciais de aquecimento são removidas depois da criação das features. Nenhum lag é preenchido com dados futuros.
 
+## OAT 3 — Entregas consolidadas até 14/10
+
+O notebook `notebooks/oat3_pipeline_preditivo.ipynb` registra as decisões e entregas dos encontros de 30/09, 07/10 e 14/10. Conforme o caderno da equipe, os modelos iniciais são `DecisionTreeRegressor` e `RandomForestRegressor`, treinados em uma divisão cronológica 80/20 e comparados com o baseline Naive por RMSE e MAPE.
+
+O Random Forest inicial venceu a comparação, com RMSE 3,8778 e MAPE 12,71%. A sintonia utiliza o mesmo Random Forest com `TimeSeriesSplit`: o Grid Search examina todas as 27 combinações registradas, enquanto o Random Search limita a busca a 10 combinações. Na execução versionada, o Grid Search encontrou `max_depth=5`, `min_samples_split=2` e `n_estimators=200`; o Random Search encontrou `max_depth=5`, `min_samples_split=2` e `n_estimators=100`.
+
+O notebook mede os tempos em cada execução e registra o trade-off sem presumir ganho: na execução atual, as buscas foram mais rápidas ou mais lentas conforme o número de combinações, mas ambas tiveram MAPE ligeiramente superior ao Random Forest inicial. A entrega de 21/10 não faz parte desta consolidação.
+
 ## Como executar
 
 ```powershell
