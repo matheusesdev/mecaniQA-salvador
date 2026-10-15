@@ -1,6 +1,6 @@
-# MecâniQA Automotive Tech — Ciência de Dados e Séries Temporais
+# MecâniQA Automotive Tech — Modelos de Aprendizado de Máquina
 
-Projeto acadêmico do Programa de Trainee 2026.2, desenvolvido pela equipe MecaniQA Salvador. O trabalho simula uma demanda real da MecâniQA Automotive Tech, empresa fictícia de Feira de Santana que fornece soluções de gestão para lojas de autopeças, autocentros e oficinas mecânicas.
+Projeto desenvolvido pela equipe MecaniQA Salvador na disciplina **Modelos de Aprendizado de Máquina**. O trabalho utiliza como contexto a MecâniQA Automotive Tech, empresa fictícia de Feira de Santana que fornece soluções de gestão para lojas de autopeças, autocentros e oficinas mecânicas.
 
 O problema de negócio é a dificuldade de prever a procura por serviços de manutenção preventiva. Oscilações diárias podem causar falta de peças, sobrecarga da equipe ou ociosidade dos mecânicos. Para apoiar o planejamento operacional, o projeto constrói e compara métodos de previsão para as séries diárias de trocas de óleo e manutenções de motor.
 
@@ -132,12 +132,6 @@ O material de apresentação entregue está em `docs/MecaniQA_OAT2_MecaniQA_Salv
 - **Implementação:** o notebook testa 10 combinações com `random_state` fixo e mede, na mesma execução, os tempos do Grid Search e do Random Search.
 - **Resultado:** o Random Search encontrou `n_estimators=100`, `max_depth=10` e `min_samples_split=5`, com RMSE 3,5719 e MAPE 11,87%. Na execução versionada, levou 12,042 s contra 38,472 s do Grid Search, economia de 68,70%, com diferença de apenas 0,04 ponto percentual no MAPE.
 
-### 21/10/2026 — fechamento ainda não realizado
-
-- **Equipe da sessão:** ainda não definida; os campos de participantes e papéis estão vazios no caderno.
-
-A sessão de 21/10 não integra o escopo implementado e validado até aqui. Os slides da OAT 3 também ainda não existem, pois serão preparados somente após a conclusão do caderno e do código. Nenhuma entrega futura é apresentada neste README como concluída.
-
 ## Como executar
 
 ```powershell
@@ -184,5 +178,3 @@ mecaniQA-salvador/
 ## Critério de entrega e versionamento
 
 A `main` representa a versão consolidada do projeto. Correções relevantes são desenvolvidas em branches separadas para preservar a rastreabilidade das decisões e permitir revisão antes da integração. Slides já entregues não são reescritos retroativamente; quando necessário, o código é corrigido de forma explícita e documentada para corresponder à evidência apresentada.
-
-Este README descreve somente o que está implementado ou claramente identificado como pendente. A atualização documental está sendo preparada na branch `docs/readme-cronologia-sessoes` para revisão antes de qualquer envio ao GitHub.
