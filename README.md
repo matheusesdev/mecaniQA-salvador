@@ -12,6 +12,16 @@ O desenvolvimento é incremental e organizado em OATs:
 
 O dataset contém 731 registros diários, de 01/01/2024 a 31/12/2025, nas colunas `Data`, `Trocas_Oleo` e `Manutencao_Motor`. O arquivo original é preservado em `data/mecaniqa_dataset.xlsx`; os tratamentos são aplicados em cópias de trabalho.
 
+## Membros da equipe
+
+- Albert Santos Soares;
+- Juan Pablo Barros Carvalho;
+- Matheus Espírito Santo dos Santos;
+- Rafael Pires Araújo;
+- William Bichara de Souza.
+
+Os nomes foram padronizados nesta apresentação geral. Nas sessões, os papéis e as marcações de ausência seguem os registros dos respectivos cadernos.
+
 ## Organização das sessões
 
 O projeto segue uma dinâmica inspirada em Scrum. Em cada sessão, a equipe interpreta o desafio do caderno, discute as alternativas, registra as decisões, implementa o código, valida o resultado e prepara as evidências da entrega. Os papéis de Piloto, Copiloto, QA, Arquiteto/Documentador e Scrum Master/Apresentador são distribuídos entre os integrantes.
@@ -36,6 +46,7 @@ Este README distingue quatro elementos em cada encontro:
 
 ### 12/08/2026 — 1ª sessão: compreensão e qualidade dos dados
 
+- **Equipe da sessão:** Albert Santos Soares — Piloto; Juan Pablo Barros Carvalho — Copiloto; Matheus Espírito Santo dos Santos — QA; Rafael Pires Araújo — Arquiteto; William Bichara de Souza — Scrum Master.
 - **Decisões da equipe:** interpretar `Data` como índice temporal, manter os registros em ordem cronológica e investigar valores ausentes, negativos e extremos antes da modelagem.
 - **Entrega solicitada:** primeira versão do notebook com importação dos dados, `head()` e `info()`, versionada no repositório.
 - **Implementação:** `notebooks/oat1_compreensao_baseline.ipynb` carrega o Excel, inspeciona a estrutura e apresenta o diagnóstico de qualidade. A limpeza reutilizável está em `oat1_processing.py` e atua sobre uma cópia, sem modificar o arquivo original.
@@ -45,6 +56,7 @@ Este README distingue quatro elementos em cada encontro:
 
 > O caderno registra a mesma data para as duas primeiras sessões. O registro foi mantido para não inventar uma cronologia diferente da documentação da equipe.
 
+- **Equipe da sessão:** Juan Pablo Barros Carvalho — Piloto; Albert Santos Soares — Copiloto; Matheus Espírito Santo dos Santos — QA; Rafael Pires Araújo — Arquiteto; William Bichara de Souza — Scrum Master.
 - **Decisões da equipe:** usar decomposição aditiva e período de 7 dias, coerente com a hipótese de comportamento semanal.
 - **Entrega solicitada:** aplicar `seasonal_decompose` sobre uma série com `DatetimeIndex` e exibir observado, tendência, sazonalidade e resíduo.
 - **Implementação:** o notebook de compreensão ordena os dados por data, cria o índice temporal e executa a decomposição aditiva com `period=7`.
@@ -52,6 +64,7 @@ Este README distingue quatro elementos em cada encontro:
 
 ### 26/08/2026 — 3ª sessão: pipeline preditivo
 
+- **Equipe da sessão:** William Bichara de Souza — Piloto; Rafael Pires Araújo — Copiloto; Albert Santos Soares — QA; Juan Pablo Barros Carvalho — Arquiteto; Matheus Espírito Santo dos Santos — Scrum Master.
 - **Decisões da equipe:** encapsular preparação e modelo em um `Pipeline`, ajustar transformadores somente com o treino e manter a divisão cronológica.
 - **Entrega solicitada:** construir um pipeline com transformador e estimador e treiná-lo com uma chamada a `pipeline.fit(X_train, y_train)`.
 - **Implementação:** `notebooks/oat1_pipeline_preditivo.ipynb` combina `SimpleImputer`, `StandardScaler` e regressão `Ridge`. O `alpha` é selecionado com `GridSearchCV` e `TimeSeriesSplit`, usando os primeiros 80% dos registros preparados para treino e os 20% finais para teste.
@@ -59,6 +72,7 @@ Este README distingue quatro elementos em cada encontro:
 
 ### 15/10/2026 — Correção de alinhamento da OAT 1
 
+- **Equipe da sessão:** não se aplica. Esta foi uma correção posterior de alinhamento, e não uma sessão registrada no caderno com nova distribuição de papéis.
 - **Motivo:** fazer o código corresponder ao conteúdo já apresentado nos slides da OAT 1, sem alterar a apresentação entregue.
 - **Implementação:** a limpeza passou a tratar ausentes, o valor extremo de `Trocas_Oleo` e valores negativos de `Manutencao_Motor`. Também foram consolidados os baselines Naive e médias móveis de 7 e 30 dias, todos com `shift(1)` para impedir o uso do valor que está sendo previsto.
 - **Impacto controlado:** o dataset original permaneceu intacto. O tratamento compartilhado foi incorporado à OAT 3 e os resultados posteriores foram novamente validados.
@@ -68,6 +82,7 @@ Este README distingue quatro elementos em cada encontro:
 
 ### 02/09/2026 — 1ª sessão: baselines sem vazamento temporal
 
+- **Equipe da sessão:** Matheus Espírito Santo dos Santos — Piloto; Rafael Pires Araújo — Copiloto; Albert Santos Soares — QA; William Bichara de Souza **(AUSENTE)** — Arquiteto; Juan Pablo Barros Carvalho — Scrum Master.
 - **Decisões da equipe:** aplicar `shift(1)` antes das previsões e janelas móveis, usar somente informações disponíveis até `t-1` e manter funções simples e independentes.
 - **Entrega solicitada:** implementar `baseline_naive`, média móvel de 7 dias e gráfico comparando valores reais e previsões, com validação de QA contra vazamento.
 - **Implementação:** `notebooks/oat2_pipeline_preditivo.ipynb` implementa os dois baselines e gera a comparação visual sobre a série `Trocas_Oleo`.
@@ -75,6 +90,7 @@ Este README distingue quatro elementos em cada encontro:
 
 ### 09/09/2026 — 2ª sessão: métricas e validação temporal
 
+- **Equipe da sessão:** Juan Pablo Barros Carvalho — Piloto; Matheus Espírito Santo dos Santos — Copiloto; Rafael Pires Araújo **(AUSENTE)** — QA; William Bichara de Souza **(AUSENTE)** — Arquiteto; Albert Santos Soares **(AUSENTE)** — Scrum Master.
 - **Decisões da equipe:** usar MAE para interpretar o erro médio na unidade da demanda, RMSE para penalizar erros maiores e `TimeSeriesSplit` no lugar de K-Fold aleatório. O MAPE desconsidera apenas observações cujo valor real é zero.
 - **Entrega solicitada:** calcular MAE, RMSE e MAPE para os dois baselines, demonstrar a divisão temporal e registrar qual abordagem seria a referência.
 - **Implementação:** o notebook avalia cada baseline em divisões temporais expansivas e imprime as métricas no formato pedido pelo professor.
@@ -82,6 +98,7 @@ Este README distingue quatro elementos em cada encontro:
 
 ### 16/09/2026 — 3ª sessão: features temporais
 
+- **Equipe da sessão:** Albert Santos Soares **(AUSENTE)** — Piloto; Juan Pablo Barros Carvalho — Copiloto; Matheus Espírito Santo dos Santos — QA; Rafael Pires Araújo — Arquiteto; William Bichara de Souza **(AUSENTE)** — Scrum Master.
 - **Decisões da equipe:** criar `lag_1`, `lag_7` e `lag_30`, além de `rolling_7` e `rolling_30`; aplicar `shift(1)` antes das janelas e remover somente as linhas iniciais de aquecimento.
 - **Entrega solicitada:** adicionar as features, tratar os NaNs gerados e comprovar o resultado com as primeiras linhas e a contagem de nulos.
 - **Implementação:** o notebook cria as cinco variáveis temporais, remove 66 linhas iniciais sem histórico suficiente e confirma zero valores nulos nas features finais.
@@ -93,6 +110,7 @@ O material de apresentação entregue está em `docs/MecaniQA_OAT2_MecaniQA_Salv
 
 ### 30/09/2026 — 1ª sessão: comparação de modelos clássicos
 
+- **Equipe da sessão:** William Bichara de Souza **(AUSENTE)** — Piloto; Albert Santos Soares **(AUSENTE)** — Copiloto; Juan Pablo Barros Carvalho — QA; Matheus Espírito Santo dos Santos — Arquiteto; Rafael Pires Araújo — Scrum Master.
 - **Decisões da equipe:** comparar `DecisionTreeRegressor` e `RandomForestRegressor`, inicialmente com parâmetros padrão, usando as mesmas features, o mesmo recorte cronológico 80/20 e as mesmas métricas.
 - **Entrega solicitada:** treinar dois modelos, calcular RMSE e MAPE e compará-los com o baseline Naive.
 - **Implementação:** `notebooks/oat3_pipeline_preditivo.ipynb` reutiliza a limpeza validada da OAT 1, cria features somente com dados anteriores e verifica que o último registro de treino precede o primeiro de teste.
@@ -100,6 +118,7 @@ O material de apresentação entregue está em `docs/MecaniQA_OAT2_MecaniQA_Salv
 
 ### 07/10/2026 — 2ª sessão: Grid Search
 
+- **Equipe da sessão:** Rafael Pires Araújo — Piloto; William Bichara de Souza **(AUSENTE)** — Copiloto; Albert Santos Soares — QA; Juan Pablo Barros Carvalho — Arquiteto; Matheus Espírito Santo dos Santos — Scrum Master.
 - **Decisões da equipe:** otimizar o modelo vencedor pelo MAPE, usar uma grade pequena e justificável e preservar `TimeSeriesSplit` durante a busca.
 - **Entrega solicitada:** declarar a grade de parâmetros, executar `GridSearchCV`, imprimir os melhores parâmetros e comparar o erro com o modelo inicial.
 - **Implementação:** a busca avalia 27 combinações de `n_estimators`, `max_depth` e `min_samples_split` sobre os mesmos dados e divisões temporais.
@@ -107,12 +126,15 @@ O material de apresentação entregue está em `docs/MecaniQA_OAT2_MecaniQA_Salv
 
 ### 14/10/2026 — 3ª sessão: Random Search e custo computacional
 
+- **Equipe da sessão:** Matheus Espírito Santo dos Santos — Piloto; Rafael Pires Araújo — Copiloto; William Bichara de Souza **(AUSENTE)** — QA; Albert Santos Soares **(AUSENTE)** — Arquiteto; Juan Pablo Barros Carvalho — Scrum Master.
 - **Decisões da equipe:** usar Random Search quando houver limitação de recursos e comparar as buscas com o mesmo modelo, espaço de parâmetros, dados, divisões e métrica.
 - **Entrega solicitada:** executar `RandomizedSearchCV` com número limitado de tentativas, medir os tempos e registrar o trade-off entre custo e erro.
 - **Implementação:** o notebook testa 10 combinações com `random_state` fixo e mede, na mesma execução, os tempos do Grid Search e do Random Search.
 - **Resultado:** o Random Search encontrou `n_estimators=100`, `max_depth=10` e `min_samples_split=5`, com RMSE 3,5719 e MAPE 11,87%. Na execução versionada, levou 12,042 s contra 38,472 s do Grid Search, economia de 68,70%, com diferença de apenas 0,04 ponto percentual no MAPE.
 
 ### 21/10/2026 — fechamento ainda não realizado
+
+- **Equipe da sessão:** ainda não definida; os campos de participantes e papéis estão vazios no caderno.
 
 A sessão de 21/10 não integra o escopo implementado e validado até aqui. Os slides da OAT 3 também ainda não existem, pois serão preparados somente após a conclusão do caderno e do código. Nenhuma entrega futura é apresentada neste README como concluída.
 
