@@ -39,8 +39,7 @@ Este README distingue quatro elementos em cada encontro:
 |---|---|---|---|
 | OAT 1 | 12/08 a 26/08, com correção documental em 15/10 | Concluída e alinhada ao slide entregue | `notebooks/oat1_compreensao_baseline.ipynb` e `notebooks/oat1_pipeline_preditivo.ipynb` |
 | OAT 2 | 02/09 a 16/09 | Concluída | `notebooks/oat2_pipeline_preditivo.ipynb` |
-| OAT 3 | 30/09 a 14/10 | Código consolidado até 14/10 | `notebooks/oat3_pipeline_preditivo.ipynb` |
-| OAT 3 — fechamento | 21/10 | Não realizado neste momento | Slides ainda não criados |
+| OAT 3 | 30/09 a 21/10 | Concluída; notebook alinhado ao caderno e ao slide | `notebooks/oat3_pipeline_preditivo.ipynb` e `docs/MecaniQA_OAT3_MecaniQA_Salvador.pdf` |
 
 ## OAT 1 — Compreensão e baseline
 
@@ -130,7 +129,17 @@ O material de apresentação entregue está em `docs/MecaniQA_OAT2_MecaniQA_Salv
 - **Decisões da equipe:** usar Random Search quando houver limitação de recursos e comparar as buscas com o mesmo modelo, espaço de parâmetros, dados, divisões e métrica.
 - **Entrega solicitada:** executar `RandomizedSearchCV` com número limitado de tentativas, medir os tempos e registrar o trade-off entre custo e erro.
 - **Implementação:** o notebook testa 10 combinações com `random_state` fixo e mede, na mesma execução, os tempos do Grid Search e do Random Search.
-- **Resultado:** o Random Search encontrou `n_estimators=100`, `max_depth=10` e `min_samples_split=5`, com RMSE 3,5719 e MAPE 11,87%. Na execução versionada, levou 12,042 s contra 38,472 s do Grid Search, economia de 68,70%, com diferença de apenas 0,04 ponto percentual no MAPE.
+- **Resultado:** o Random Search encontrou `n_estimators=100`, `max_depth=10` e `min_samples_split=5`, com RMSE 3,5719 e MAPE 11,87%. No slide, que registra a execução da equipe, levou 12,042 s contra 38,472 s do Grid Search, economia de 68,70%. O notebook versionado, executado em outro ambiente, registra 7,327 s contra 25,845 s (economia de 71,65%); os tempos dependem da máquina. Em ambos, a diferença no MAPE é de apenas 0,04 ponto percentual.
+
+### 21/10/2026 — 4ª sessão: motor de métricas e fechamento
+
+- **Equipe da sessão:** Juan Pablo Barros Carvalho — Piloto; Matheus Espírito Santo dos Santos — Copiloto; Rafael Pires Araújo — QA; William Bichara de Souza **(AUSENTE)** — Arquiteto; Albert Santos Soares — Scrum Master.
+- **Decisões da equipe:** usar o MAE como métrica mais didática, por estar na mesma unidade da demanda (trocas de óleo por dia), e o MAPE e o RMSE como complementos. O baseline antigo é a média móvel simples de 7 dias.
+- **Entrega solicitada:** motor de métricas com MAE, RMSE e MAPE para Baseline Antigo, Modelo ML Inicial e Modelo ML Tunado, e gráfico sobreposto com manutenções reais, baseline e modelo tunado.
+- **Implementação:** o notebook calcula a média móvel de 7 dias com `shift(1)`, consolida as três métricas nos três cenários e plota a comparação final no período de teste.
+- **Resultado:** média móvel de 7 dias — MAE 7,38, RMSE 8,16 e MAPE 30,98%; Random Forest inicial — MAE 2,88, RMSE 3,60 e MAPE 12,02%; Random Forest tunado (Grid Search) — MAE 2,83, RMSE 3,56 e MAPE 11,83%. O MAE caiu cerca de 61,6% em relação à média móvel.
+
+O material de apresentação entregue está em `docs/MecaniQA_OAT3_MecaniQA_Salvador.pdf`.
 
 ## Como executar
 
@@ -159,7 +168,7 @@ mecaniQA-salvador/
 ├── docs/
 │   ├── mecaniQA_oat1_mecaniQA-salvador.pdf
 │   ├── MecaniQA_OAT2_MecaniQA_Salvador.pdf
-│   └── (slides da OAT 3 ainda não criados)
+│   └── MecaniQA_OAT3_MecaniQA_Salvador.pdf
 ├── notebooks/
 │   ├── oat1_compreensao_baseline.ipynb
 │   ├── oat1_pipeline_preditivo.ipynb
